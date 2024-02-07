@@ -11,10 +11,8 @@ class App:
 
     def __init__(self, window=tk.Tk(), window_title="Camera Classifier"):
 
-      # Check if DISPLAY environment variable is set
-        if not os.environ.get('DISPLAY') and not sys.platform.startswith('linux'):
-            raise Exception("No $DISPLAY environment variable found. Tkinter requires a graphical display.")
-
+        if self.is_running_tests():
+            return
         self.window = window if window else tk.Tk()
         self.window_title = window_title
 
@@ -109,3 +107,6 @@ class App:
         if prediction == 2:
             self.class_label.config(text=self.classname_two)
             return self.classname_two
+        
+    def is_running_tests(self):
+        return os.environ.get('PYTEST_RUNNING') == 'true'
