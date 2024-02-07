@@ -2,11 +2,12 @@ import pytest
 import os
 from model import Model
 from camera import Camera
+os.environ['PYTEST_RUNNING'] = 'true'
 from app import App
 import numpy as np
 # Test Model class
 # Set PYTEST_RUNNING environment variable to 'true'
-os.environ['PYTEST_RUNNING'] = 'true'
+
  # Assuming the model predicts binary classes
 # def test_model_predict():
 #     model = Model()
