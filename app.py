@@ -5,20 +5,22 @@ import os
 import PIL.Image, PIL.ImageTk
 import model
 import camera
+import sys
 
 class App:
 
     def __init__(self, window=tk.Tk(), window_title="Camera Classifier"):
 
-        self.window = window
+      # Check if DISPLAY environment variable is set
+        if not os.environ.get('DISPLAY') and not sys.platform.startswith('linux'):
+            raise Exception("No $DISPLAY environment variable found. Tkinter requires a graphical display.")
+
+        self.window = window if window else tk.Tk()
         self.window_title = window_title
 
         self.counters = [1, 1]
-
         self.model = model.Model()
-
         self.auto_predict = False
-
         self.camera = camera.Camera()
 
         self.init_gui()
@@ -92,7 +94,6 @@ class App:
             print(self.predict())
 
         ret, frame = self.camera.get_frame()
-
         if ret:
             self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
             self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
@@ -102,7 +103,6 @@ class App:
     def predict(self):
         frame = self.camera.get_frame()
         prediction = self.model.predict(frame)
-
         if prediction == 1:
             self.class_label.config(text=self.classname_one)
             return self.classname_one
